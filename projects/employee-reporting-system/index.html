@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Laporan Kegiatan (Demo)</title>
+<script src="https://cdn.jsdelivr.net/npm/html-docx-js/dist/html-docx.js"></script>
+<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+<div style="position:sticky;top:0;z-index:99;background:#f59e0b;color:#1c1f26;font:600 13px Arial;padding:7px 12px;display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap">MODE DEMO – semua data fiktif &amp; hanya tersimpan di browser ini <button onclick="if(confirm('Reset semua data demo ke kondisi awal?'))demoReset()" style="padding:3px 10px;border:1px solid #1c1f26;background:#fff;border-radius:6px;cursor:pointer">Reset data demo</button></div>
+<div class="wrap" id="authBox"><div class="card"><h1>📋 Laporan Kegiatan Harian</h1><div class="sub">Login Employee / Admin</div><div class="small" style="margin:8px 0;padding:8px;border:1px dashed var(--border);border-radius:8px">Akun demo (klik untuk mengisi): <a href="#" onclick="demoFill('admin@demo.test','admin123');return false">Admin</a> · <a href="#" onclick="demoFill('pegawai01@demo.test','pegawai123');return false">Pegawai 01</a> · <a href="#" onclick="demoFill('pegawai02@demo.test','pegawai123');return false">Pegawai 02</a><br>Pegawai 01–12: <code>pegawaiNN@demo.test</code> / <code>pegawai123</code> · Admin: <code>admin@demo.test</code> / <code>admin123</code></div><label>Email</label><input id="email" type="email"><label>Password</label><input id="password" type="password"><div class="row"><button class="primary" onclick="login()">Login</button></div><div id="authError" class="error"></div></div></div>
+<div class="wrap hidden" id="appBox">
+<div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><div><h1>📋 Laporan Kegiatan Harian</h1><div class="sub">Web Apps By Sisi Kreatif <span id="dbstat" class="badge">memuat...</span></div></div><button class="ghost" onclick="logout()">Logout</button></div>
+<div class="card"><div class="grid4"><div><span class="small">Nama</span><br><b id="pName">-</b></div><div><span class="small">Nomor</span><br><b id="pNumber">-</b></div><div><span class="small">Department</span><br><b id="pDept">-</b></div><div><span class="small">Position</span><br><b id="pPosition">-</b></div></div></div>
+<div class="tabs"><button id="tReport" class="tab active" onclick="tab('report')">Laporan</button><button id="tAttendance" class="tab" onclick="tab('attendance')">Absensi</button><button id="tAdmin" class="tab hidden" onclick="tab('admin')">Admin</button></div>
+<section id="reportTab">
+<div class="card"><b>Sub Judul Dokumen</b><label>Sub Judul untuk hasil Word</label><input id="docSubtitle" value="Belanja Jasa Tenaga Kebersihan (Satgas)" placeholder="Sub judul untuk Word" oninput="saveDocSubtitle(this.value)"></div>
+<div class="card"><b>Jadwal Kerja</b><textarea id="scheduleWork" rows="6" placeholder="Tulis jadwal kerja bebas di sini..." oninput="saveSchedule()"></textarea></div>
+<div class="card"><b>Periode Laporan</b><div class="grid2"><div><label>Tahun</label><input id="year" type="number"></div><div><label>Bulan</label><select id="month"><option value="1">Januari</option><option value="2">Februari</option><option value="3">Maret</option><option value="4">April</option><option value="5">Mei</option><option value="6">Juni</option><option value="7">Juli</option><option value="8">Agustus</option><option value="9">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option></select></div></div><div class="row"><button class="primary" onclick="openReport()">Buka / Buat Laporan</button><button class="ghost" onclick="submitReport()">Tandai Dikirim</button></div><div id="reportInfo" class="small"></div></div>
+<div class="card"><b>Tambah Kegiatan</b><div class="grid2"><div><label>Tanggal</label><input id="actDate" type="date"></div><div><label>Jam</label><input id="actTime" type="time"></div></div><label>Uraian Kegiatan</label><textarea id="actDesc" placeholder="Tuliskan uraian kegiatan..."></textarea><label>Foto Dokumentasi</label><div id="actBox" class="filebox">Klik untuk memilih foto<input id="actFile" type="file" accept="image/*"></div><div class="row"><button class="primary" onclick="addActivity()">+ Simpan Kegiatan</button></div></div>
+<div class="card"><b>Daftar Kegiatan <span id="actCount" class="badge">0</span></b><div id="actTable" class="table"><div class="small" style="padding:20px;text-align:center">Buka laporan terlebih dahulu.</div></div></div>
+<div class="card"><b>Ekspor Word</b><div class="grid2"><div><label>Nama PPK</label><input id="ppkName"></div><div><label>Jabatan PPK</label><input id="ppkPosition"></div></div><label>NIP PPK</label><input id="ppkNip"><div class="row"><button class="primary" onclick="word()">⬇️ Unduh Word</button></div></div>
+</section>
+<section id="attendanceTab" class="hidden"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><b>Absensi Hari Ini</b><button class="primary" onclick="attendanceWord()">⬇️ Unduh Absensi Word</button></div><div id="attInfo" class="info" style="margin-top:10px">Memuat...</div><label>Tanggal Absensi</label><input id="attDate" type="date" onchange="loadAttendance()"><div class="grid2"><div><label>Foto Check-in</label><div id="inBox" class="filebox">Pilih foto<input id="inFile" type="file" accept="image/*"></div><div class="row"><button class="primary" onclick="checkIn()">Check-in</button></div></div><div><label>Foto Check-out</label><div id="outBox" class="filebox">Pilih foto<input id="outFile" type="file" accept="image/*"></div><div class="row"><button class="primary" onclick="checkOut()">Check-out</button></div></div></div></div><div class="card"><b>Riwayat Absensi</b><div id="attTable" class="table"></div></div></section>
+<section id="adminTab" class="hidden">
+<div class="card"><b>Sub Judul Dokumen</b><label>Sub Judul untuk hasil Word</label><input id="adminDocSubtitle" value="Belanja Jasa Tenaga Kebersihan (Satgas)" placeholder="Sub judul untuk Word" oninput="saveDocSubtitle(this.value)"></div>
+<div class="card"><b>Jadwal Kerja</b><textarea id="adminScheduleWork" rows="6" placeholder="Tulis jadwal kerja bebas di sini..." oninput="saveSchedule()"></textarea></div>
+<div class="card">
+<b>Admin — Cek Data Pegawai</b>
+<div class="grid2">
+<div><label>Nama Pegawai</label><select id="adminEmployeeSelect"><option value="">Memuat pegawai...</option></select></div>
+<div><label>Periode Laporan</label><div class="grid2"><input id="adminYear" type="number"><select id="adminMonth"><option value="1">Januari</option><option value="2">Februari</option><option value="3">Maret</option><option value="4">April</option><option value="5">Mei</option><option value="6">Juni</option><option value="7">Juli</option><option value="8">Agustus</option><option value="9">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option></select></div></div>
+</div>
+<div class="row">
+<button class="primary" onclick="adminCheckReport()">📋 Cek Laporan</button>
+<button class="ghost" onclick="adminCheckAttendance()">🕘 Cek Absensi</button>
+<button class="primary" onclick="adminDownloadWord()">⬇️ Unduh Laporan Word</button><button class="primary" onclick="adminAttendanceWord()">⬇️ Unduh Absensi Word</button>
+</div>
+<div id="adminSelectedInfo" class="small" style="margin-top:10px">Pilih nama pegawai dan periode.</div>
+</div>
+<div class="card"><b>Ringkasan</b><div class="grid4"><div class="stat">Employee aktif<b id="sEmp">-</b></div><div class="stat">Laporan<b id="sRep">-</b></div><div class="stat">Kegiatan<b id="sAct">-</b></div><div class="stat">Absensi<b id="sAtt">-</b></div></div></div>
+<div class="card"><b>Hasil Laporan Kegiatan</b><div id="adminReportResult" class="table"><div class="small" style="padding:20px;text-align:center">Pilih pegawai lalu klik Cek Laporan.</div></div></div>
+<div class="card"><b>Hasil Absensi</b><div id="adminAttendanceResult" class="table"><div class="small" style="padding:20px;text-align:center">Pilih pegawai lalu klik Cek Absensi.</div></div></div>
+<div class="card"><b>Data PPK untuk Dokumen</b><div class="grid2"><div><label>Nama PPK</label><input id="adminPpkName"></div><div><label>Jabatan PPK</label><input id="adminPpkPosition"></div></div><label>NIP PPK</label><input id="adminPpkNip"></div>
+<div class="card" style="border-color:var(--danger)"><b style="color:var(--danger)">Hapus Semua Laporan</b><div class="small" style="margin:6px 0">Menghapus SEMUA laporan, kegiatan, dan absensi seluruh pegawai tanpa terkecuali. Tidak bisa dibatalkan. Data pegawai tidak ikut terhapus. Foto di Cloudinary tidak terhapus dari sini.</div><div class="row"><button class="danger" style="padding:9px 14px;font-size:.85rem" onclick="deleteAllReports()">🗑️ Hapus Semua Laporan</button><button class="danger" style="padding:9px 14px;font-size:.85rem" onclick="deleteReportsByMonth()">🗑️ Hapus Laporan Bulan Terpilih</button></div><div class="small" style="margin-top:6px">Tombol "Bulan Terpilih" menghapus laporan SEMUA pegawai pada Tahun &amp; Bulan yang dipilih di kotak "Periode Laporan" pada kartu Admin di atas.</div><div id="deleteAllInfo" class="small" style="margin-top:8px"></div></div>
+</section>
+</div>
+<script src="../../infrastructure/demo-backend.js"></script>
+<script src="../../script.js"></script></body></html>
