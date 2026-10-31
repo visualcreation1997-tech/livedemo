@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Laporan Kegiatan (Demo)</title>
-<script src="https://cdn.jsdelivr.net/npm/html-docx-js/dist/html-docx.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
 <style>
 :root{--bg:#f5f6f8;--card:#fff;--text:#1c1f26;--muted:#6b7280;--accent:#2563eb;--border:#e2e5ea;--danger:#dc2626;--ok:#16a34a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Segoe UI,sans-serif}.wrap{max-width:1050px;margin:auto;padding:22px 16px 60px}.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px}h1{font-size:1.35rem;margin:0 0 5px}.sub,.small{color:var(--muted);font-size:.82rem}label{display:block;color:var(--muted);font-size:.8rem;margin:9px 0 4px}input,textarea,select{width:100%;padding:9px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text)}textarea{min-height:75px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}button{border:0;border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer}.primary{background:var(--accent);color:white}.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}.danger{background:transparent;color:var(--danger);border:1px solid var(--danger);padding:6px 9px;font-size:.75rem}.badge{display:inline-block;background:var(--accent);color:white;border-radius:20px;padding:3px 9px;font-size:.7rem}.ok{background:var(--ok)}.tabs{display:flex;gap:6px;margin-bottom:16px}.tab{background:var(--card);border:1px solid var(--border)}.tab.active{background:var(--accent);color:#fff}.hidden{display:none!important}.table{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:.8rem}th,td{border:1px solid var(--border);padding:7px;text-align:center;vertical-align:middle}th{background:var(--bg)}td.left{text-align:left}.photo{max-width:90px;max-height:75px;border-radius:5px}.filebox{position:relative;min-height:85px;border:1.5px dashed var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);overflow:hidden;text-align:center}.filebox input{position:absolute;inset:0;opacity:0;cursor:pointer}.filebox img{max-width:100%;max-height:125px}.error{color:var(--danger);font-size:.82rem}.info{padding:10px;background:#eef5ff;border-radius:8px;font-size:.83rem}.stat{padding:12px;border:1px solid var(--border);border-radius:10px}.stat b{display:block;font-size:1.3rem;margin-top:4px}@media(max-width:700px){.grid2,.grid4{grid-template-columns:1fr}}
 </style>
@@ -247,58 +247,6 @@ async function adminCheckAttendance(){
  q.data.forEach(x=>h+='<tr><td>'+fmt(x.attendance_date)+'</td><td>'+esc(x.check_in_time?new Date(x.check_in_time).toLocaleTimeString('id-ID'):'-')+'</td><td>'+esc(x.check_out_time?new Date(x.check_out_time).toLocaleTimeString('id-ID'):'-')+'</td><td>'+(x.check_in_photo?'<a target="_blank" href="'+esc(x.check_in_photo)+'">Lihat</a>':'-')+'</td><td>'+(x.check_out_photo?'<a target="_blank" href="'+esc(x.check_out_photo)+'">Lihat</a>':'-')+'</td><td>'+((x.check_in_latitude!=null&&x.check_in_longitude!=null)?esc(Number(x.check_in_latitude).toFixed(5)+', '+Number(x.check_in_longitude).toFixed(5)):'-')+'</td></tr>');
  $('adminAttendanceResult').innerHTML=h+'</table>';
 }
-function reportWordCss(){return `
-@page{size:A4 portrait;margin:1.2cm 1cm 1.2cm 1cm}
-body{font-family:Arial,Helvetica,sans-serif;font-size:10pt;color:#000;margin:0}
-.title{text-align:center;font-weight:700;font-size:14pt;margin:0 0 3pt}
-.subtitle{text-align:center;font-weight:700;font-size:11pt;margin:0 0 6pt}
-table{border-collapse:collapse}
-.meta{width:100%;margin:2pt 0 7pt;table-layout:fixed;border:none;border-collapse:collapse}
-.meta td{border:none;padding:0;vertical-align:top;font-size:10pt;outline:none}
-.meta .schedule{width:40%;text-align:left;font-size:9pt;line-height:13pt;padding-left:0;vertical-align:top}
-.report{width:100%;table-layout:fixed}
-.report th,.report td{border:1px solid #000;padding:4pt;vertical-align:middle}
-.report th{text-align:center;font-weight:700;height:24pt}
-.report thead{display:table-header-group}.report .identity-row{page-break-after:avoid}.report .identity-row td{border:none}
-.report tr{page-break-inside:avoid}
-.report .repeat-meta{font-weight:700;text-align:left;font-size:10pt;line-height:16pt;padding:0 0 4pt;border:none;background:#fff;outline:none;mso-border-alt:none}
-.report .repeat-meta .meta{display:table;width:100%}
-.report td:nth-child(1){text-align:center}
-.report td:nth-child(2){text-align:center;font-weight:600}
-.report td:nth-child(3){text-align:center}
-.report td:nth-child(4){text-align:center;font-weight:600}
-.report img{width:5.2cm;height:4.1cm;object-fit:cover;display:block;margin:0 auto}
-.sign{width:100%;margin-top:28pt;table-layout:fixed;border-collapse:collapse}
-.sign td{border:0;text-align:center;vertical-align:top;width:50%;font-size:10pt;line-height:16pt;padding:0}
-`;}
-function attendanceWordCss(){return `
-@page{size:A4 portrait;margin:1.0cm 1.0cm 1.0cm 1.0cm}
-body{font-family:Arial,Helvetica,sans-serif;font-size:10pt;color:#000;margin:0}
-.title{text-align:center;font-weight:700;font-size:15pt;margin:0 0 7pt}
-.subtitle{text-align:center;font-weight:700;font-size:11pt;margin:0 0 6pt}
-.meta{width:100%;margin:2pt 0 7pt;border-collapse:collapse;table-layout:fixed;border:none}
-.meta td{border:none;padding:0;vertical-align:top;font-size:10pt;outline:none}
-.meta .schedule{width:40%;text-align:left;padding-left:0;line-height:13pt;font-weight:400;font-size:9pt}
-.att{width:100%;border-collapse:collapse;table-layout:fixed}
-.att th,.att td{border:1px solid #000;vertical-align:middle}
-.att th{padding:4pt 2pt;text-align:center;font-weight:700;font-size:9pt;line-height:11pt}
-.att thead{display:table-header-group}.att .identity-row{page-break-after:avoid}.att .identity-row td{border:none}
-.att tr{page-break-inside:avoid}
-.att .meta td{text-align:left;font-size:10pt;font-weight:700;line-height:16pt}
-.att .meta td.schedule{font-size:9pt;line-height:13pt;font-weight:400}
-.att .repeat-meta{font-weight:700;text-align:left;font-size:10pt;line-height:16pt;padding:0 0 4pt;border:none;background:#fff;outline:none;box-shadow:none;mso-border-alt:none}
-.att td{padding:2pt;text-align:center;font-size:9pt}
-.att .num{width:6%;font-weight:700}
-.att .date{width:14%;font-weight:700}
-.att .photo{width:40%}
-.att tr.data-row td{height:150pt}
-.att img{width:4.4cm;height:4.4cm;object-fit:cover;display:block;margin:0 auto}
-.sign{width:100%;margin-top:18pt;border-collapse:collapse;table-layout:fixed}
-.sign td{border:1px dashed #cfcfcf;text-align:center;vertical-align:top;width:50%;font-size:10pt;line-height:14pt;padding:8pt 4pt}
-.sign .blank{height:120pt}
-.sign .right{padding-top:8pt}
-`;}
-
 function saveDocSubtitle(v){
   localStorage.setItem('attendance_doc_subtitle',(v||'').trim());
 }
@@ -315,66 +263,13 @@ function restoreDocSubtitle(){
   ['docSubtitle','adminDocSubtitle'].forEach(id=>{if($(id))$(id).value=v;});
 }
 
-function attendancePhoto(url){
-  return url ? '<img src="'+esc(url)+'" width="166" height="166" style="width:4.4cm;height:4.4cm;object-fit:cover;display:block;margin:0 auto">' : '-';
-}
 function downloadBlob(blob,filename){
   if(!blob)return alert('Dokumen Word gagal dibuat.');
   const u=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(u),1500);
+  setTimeout(()=>URL.revokeObjectURL(u),5000);
 }
 
-function attendanceSignHtml(name,ppkName,ppkPosition,ppkNip){
-  return '<table class="sign"><tr>'+
-    '<td><div> </div><div class="blank"></div></td>'+
-    '<td class="right">Mengetahui,<br>PPK,<br><br><br><br><br><br><br><u>'+esc(ppkName||'')+'</u><br>'+esc(ppkPosition||'')+'<br>NIP. '+esc(ppkNip||'')+'</td>'+
-    '</tr></table>';
-}
-
-/* Identitas Nama & Bulan berada di THEAD agar otomatis berulang pada setiap halaman Word/PDF. */
-function splitHtmlRows(rows){return String(rows||'').match(/<tr[\s\S]*?<\/tr>/gi)||[];}
-/* Nama/Bulan berada di header tabel dan otomatis diulang oleh Word pada setiap halaman. */
-function metaBlock(name,period){
-  return '<table class="meta"><tr><td style="width:60%;font-weight:700;line-height:16pt;text-align:left;border:0">Nama : '+esc(name||'')+'<br>Bulan : '+esc(period)+'</td><td class="schedule" style="width:40%">'+scheduleHtml()+'</td></tr></table>';
-}
-function pagedTables(cls,name,period,rows,head,firstCount){
-  const all=splitHtmlRows(rows);if(!all.length)return "";
-  /*
-   * Halaman 1: Nama, Bulan & Jadwal Kerja sejajar (tabel pertama).
-   * Halaman berikutnya: hanya Nama & Bulan yang berulang (THEAD tabel kedua).
-   * Garis dihilangkan dengan border:none (tanpa !important) + atribut border="0".
-   */
-  const noB='border:none;border-top:none;border-right:none;border-bottom:none;border-left:none;mso-border-alt:none;outline:none;background:#fff;';
-  const sch=scheduleHtml();
-  const isAtt=cls==='att';
-  /* perkiraan jumlah baris yang muat di halaman 1, menyesuaikan tinggi jadwal kerja */
-  const schLines=sch?sch.split('<br>').reduce((n,l)=>n+Math.max(1,Math.ceil(l.length/45)),0):0;
-  const avail=(isAtt?685:698)-Math.max(32,schLines*13);
-  const n=Math.max(1,Math.floor(avail/(isAtt?200:135)));
-  const nameCell=(w)=>'<td style="width:'+w+';'+noB+'padding:0;vertical-align:top;text-align:left;font-size:10pt;line-height:16pt;font-weight:700">Nama : '+esc(name||'')+'<br>Bulan : '+esc(period)+'</td>';
-  const schCell='<td class="schedule" style="width:40%;'+noB+'padding:0;vertical-align:top;text-align:left;font-size:9pt;line-height:13pt;font-weight:400">'+sch+'</td>';
-  const metaRow=(withSchedule)=>'<tr class="identity-row">'+
-    '<td colspan="4" class="repeat-meta" style="'+noB+'text-align:left;font-weight:700;padding:0 0 5pt;vertical-align:top">'+
-    '<table border="0" cellspacing="0" cellpadding="0" class="meta" style="width:100%;margin:0;'+noB+'border-collapse:collapse;table-layout:fixed"><tr>'+
-    (withSchedule?nameCell('60%')+schCell:nameCell('100%'))+
-    '</tr></table></td></tr>';
-  /* Absensi halaman 1: baris jadwal kerja TIDAK di THEAD agar tidak ikut berulang di halaman berikutnya */
-  const build=(rs,withSchedule)=>(isAtt&&withSchedule)
-    ?'<table class="'+cls+'" border="0" cellspacing="0" cellpadding="0"><tbody>'+metaRow(true)+head+rs.join('')+'</tbody></table>'
-    :'<table class="'+cls+'" border="0" cellspacing="0" cellpadding="0"><thead>'+metaRow(withSchedule)+head+'</thead><tbody>'+rs.join('')+'</tbody></table>';
-  let out=build(all.slice(0,n),true);
-  if(all.length>n){
-    out+='<p style="page-break-before:always;margin:0;padding:0;font-size:1pt;line-height:1pt">&nbsp;</p>'+build(all.slice(n),false);
-  }
-  return out;
-}
-function reportPagedTables(name,period,rows){
-  return pagedTables('report',name,period,rows,'<tr><th style="width:6%">No</th><th style="width:14%">Tanggal</th><th style="width:40%">Dokumentasi Kegiatan</th><th style="width:40%">Uraian Kegiatan</th></tr>',4);
-}
-function attendancePagedTables(empName,period,rows){
-  return pagedTables('att',empName,period,rows,'<tr><th class="num">No</th><th class="date">Tanggal</th><th class="photo">Data Dukung Kehadiran Datang</th><th class="photo">Data Dukung Kehadiran Pulang</th></tr>',4);
-}
 function saveSchedule(){
   const e=$('scheduleWork'),a=$('adminScheduleWork');
   const active=(document.activeElement===a?a:e);
@@ -391,18 +286,164 @@ function restoreSchedule(){
   const v=getSchedule();
   ['scheduleWork','adminScheduleWork'].forEach(id=>{if($(id))$(id).value=v;});
 }
-function scheduleHtml(){
-  const v=getSchedule();
-  return v ? esc(v).replace(/\r?\n/g,'<br>') : '';
+/* ===== EKSPOR WORD (.docx asli, dibuat dengan library docx) =====
+   Dokumen berisi tabel & paragraf Word sungguhan dan foto ditanam di dalam file,
+   sehingga bisa dibuka di Word, Google Docs, WPS, maupun aplikasi Word di HP. */
+const WD_W=11906,WD_H=16838,WD_CM=567;
+function wdNoBorders(){const n={style:docx.BorderStyle.NONE,size:0,color:'FFFFFF'};return{top:n,bottom:n,left:n,right:n}}
+function wdBorders(color,style){const b={style:style||docx.BorderStyle.SINGLE,size:6,color:color||'000000'};return{top:b,bottom:b,left:b,right:b}}
+function wdText(t,o={}){
+  const lines=String(t??'').split(/\r?\n/);
+  const runs=lines.map((l,i)=>new docx.TextRun({text:l,break:i?1:undefined,bold:!!o.bold,size:o.size||20,font:'Arial',underline:o.u?{type:docx.UnderlineType.SINGLE}:undefined}));
+  return wdPara(runs,o);
 }
-function buildAttendanceWordHtml(rows,empName,empNumber,department,position,period,ppkName,ppkPosition,ppkNip,subtitle){
-  return '<html><head><meta charset="utf-8"><style>'+attendanceWordCss()+'</style></head><body>'+
-    '<div class="title">DAFTAR HADIR</div>'+
-    '<div class="subtitle">'+esc(subtitle||'Belanja Jasa Tenaga Kebersihan (Satgas)')+'</div>'+
-    attendancePagedTables(empName,period,rows)+
-    attendanceSignHtml(empName,ppkName,ppkPosition,ppkNip)+
-    '</body></html>';
+function wdPara(children,o={}){
+  return new docx.Paragraph({children:Array.isArray(children)?children:[children],alignment:o.align||docx.AlignmentType.LEFT,keepNext:!!o.keepNext,
+    spacing:{before:o.before||0,after:o.after||0,line:o.line,lineRule:o.line?'exact':undefined}});
 }
+function wdCell(children,w,o={}){
+  return new docx.TableCell({children,width:{size:w,type:docx.WidthType.DXA},columnSpan:o.span,verticalAlign:o.valign||docx.VerticalAlign.CENTER,
+    borders:o.borders||wdBorders(),margins:o.margins||{top:80,bottom:80,left:80,right:80}});
+}
+function wdRow(cells,o={}){
+  return new docx.TableRow({children:cells,tableHeader:!!o.header,cantSplit:true,height:o.h?{value:o.h,rule:docx.HeightRule.ATLEAST}:undefined});
+}
+function wdTable(rows,cols){
+  const n=docx.BorderStyle.NONE,none={style:n,size:0,color:'FFFFFF'};
+  return new docx.Table({rows,columnWidths:cols,width:{size:cols.reduce((a,b)=>a+b,0),type:docx.WidthType.DXA},layout:docx.TableLayoutType.FIXED,
+    borders:{top:none,bottom:none,left:none,right:none,insideHorizontal:none,insideVertical:none}});
+}
+function wdPhoto(bytes,hasUrl,w,h){
+  if(bytes)return wdPara(new docx.ImageRun({data:bytes,transformation:{width:w,height:h}}),{align:docx.AlignmentType.CENTER});
+  return wdText(hasUrl?'Foto tidak dapat dimuat':'-',{align:docx.AlignmentType.CENTER,size:hasUrl?16:20});
+}
+function wdSpacer(before,pageBreak){
+  return new docx.Paragraph({pageBreakBefore:!!pageBreak,children:[new docx.TextRun({text:'',size:2})],spacing:{before:before||0,after:0,line:20,lineRule:'exact'}});
+}
+
+/* Ambil foto (data URI atau link), potong rasio w:h, simpan sebagai JPEG supaya aman untuk Word */
+const _wdPhotoCache=new Map();
+function photoJpeg(url,w,h){
+  if(!url)return Promise.resolve(null);
+  const key=url+'|'+w+'x'+h;
+  if(_wdPhotoCache.has(key))return _wdPhotoCache.get(key);
+  const p=(async()=>{
+    let objUrl=null;
+    try{
+      const res=await fetch(url);
+      if(!res.ok)throw new Error('HTTP '+res.status);
+      objUrl=URL.createObjectURL(await res.blob());
+      const img=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(new Error('Gambar tidak valid'));i.src=objUrl});
+      const c=document.createElement('canvas');c.width=w;c.height=h;
+      const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,w,h);
+      const s=Math.max(w/img.naturalWidth,h/img.naturalHeight),dw=img.naturalWidth*s,dh=img.naturalHeight*s;
+      x.drawImage(img,(w-dw)/2,(h-dh)/2,dw,dh);
+      const out=await new Promise(r=>c.toBlob(r,'image/jpeg',.85));
+      if(!out)throw new Error('Gagal memproses foto');
+      return new Uint8Array(await out.arrayBuffer());
+    }catch(e){console.warn('Foto gagal dimuat:',e);return null}
+    finally{if(objUrl)URL.revokeObjectURL(objUrl)}
+  })();
+  _wdPhotoCache.set(key,p);return p;
+}
+async function wdPool(list,limit,fn){
+  const out=new Array(list.length);let i=0;
+  await Promise.all(Array.from({length:Math.min(limit,list.length)},async()=>{while(i<list.length){const k=i++;out[k]=await fn(list[k],k)}}));
+  return out;
+}
+
+/* Tabel utama. Halaman 1: Nama, Bulan & Jadwal Kerja. Halaman berikutnya: Nama & Bulan berulang di header tabel. */
+function wdPagedTables(o){
+  const C=docx.AlignmentType.CENTER,w=o.cols,total=w.reduce((a,b)=>a+b,0);
+  const sch=getSchedule()?getSchedule().split(/\r?\n/):[];
+  const schLines=sch.reduce((n,l)=>n+Math.max(1,Math.ceil(l.length/45)),0);
+  const idH=Math.max(32,schLines*13)+5;
+  const avail=o.pagePt-o.fixedPt-idH-o.headPt-10;
+  const n=Math.max(1,Math.floor(avail/o.rowEst));
+  const identity=(withSch,header)=>{
+    const m={top:0,bottom:100,left:0,right:0};
+    const nameP=[wdText('Nama : '+(o.name||''),{bold:true,line:320}),wdText('Bulan : '+o.period,{bold:true,line:320})];
+    if(!withSch)return wdRow([wdCell(nameP,total,{span:4,borders:wdNoBorders(),margins:m,valign:docx.VerticalAlign.TOP})],{header});
+    const schP=sch.length?sch.map(l=>wdText(l,{size:18,line:260})):[wdText('')];
+    return wdRow([wdCell(nameP,w[0]+w[1]+w[2],{span:3,borders:wdNoBorders(),margins:m,valign:docx.VerticalAlign.TOP}),
+      wdCell(schP,w[3],{borders:wdNoBorders(),margins:m,valign:docx.VerticalAlign.TOP})],{header});
+  };
+  const head=(header)=>wdRow(o.headLabels.map((l,i)=>wdCell([wdText(l,{bold:true,size:o.headSize,align:C})],w[i],{margins:{top:80,bottom:80,left:40,right:40}})),{header,h:480});
+  const data=(cells)=>wdRow(cells.map((c,i)=>wdCell(c,w[i])),{h:o.rowH});
+  const first=o.rows.slice(0,n),rest=o.rows.slice(n);
+  const out=[wdTable([identity(true,false),head(false),...first.map(data)],w)];
+  if(rest.length){
+    out.push(wdSpacer(0,true));
+    out.push(wdTable([identity(false,true),head(true),...rest.map(data)],w));
+  }
+  return out;
+}
+
+function wdSignLines(lines,o){return lines.map(x=>wdText(x.t,{align:docx.AlignmentType.CENTER,line:o.line,u:x.u,keepNext:true}))}
+function wdBlank(n){return Array.from({length:n},()=>({t:''}))}
+
+function wdDocument(children,margin,title){
+  return new docx.Document({creator:'Laporan Kegiatan',title,styles:{default:{document:{run:{font:'Arial',size:20}}}},
+    sections:[{properties:{page:{size:{width:WD_W,height:WD_H},margin}},children}]});
+}
+
+async function wdBuildReport({name,period,subtitle,items,ppk}){
+  const C=docx.AlignmentType.CENTER,cols=[646,1508,4309,4309],half=5386;
+  const imgs=await wdPool(items,6,it=>photoJpeg(it.photo,520,410));
+  const rows=items.map((it,i)=>[
+    [wdText(String(i+1),{align:C})],
+    [wdText(fmt(it.date),{bold:true,align:C})],
+    [wdPhoto(imgs[i],!!it.photo,197,155)],
+    [wdText(it.desc||'',{bold:true,align:C})]
+  ]);
+  const sign=wdTable([wdRow([
+    wdCell(wdSignLines([{t:'Mengetahui,'},{t:'PPK,'},...wdBlank(7),{t:ppk.name||'',u:true},{t:ppk.position||''},{t:'NIP. '+(ppk.nip||'')}],{line:320}),half,{borders:wdNoBorders(),margins:{top:0,bottom:0,left:0,right:0},valign:docx.VerticalAlign.TOP}),
+    wdCell(wdSignLines([{t:''},{t:'Yang Membuat Laporan,'},...wdBlank(7),{t:name||'',u:true}],{line:320}),half,{borders:wdNoBorders(),margins:{top:0,bottom:0,left:0,right:0},valign:docx.VerticalAlign.TOP})
+  ])],[half,half]);
+  const children=[
+    wdText('LAPORAN KEGIATAN',{bold:true,size:28,align:C,after:60}),
+    wdText(subtitle,{bold:true,size:22,align:C,after:120}),
+    ...wdPagedTables({name,period,cols,headLabels:['No','Tanggal','Dokumentasi Kegiatan','Uraian Kegiatan'],headSize:20,rows,rowH:2500,rowEst:127,pagePt:774,fixedPt:39,headPt:30}),
+    wdSpacer(560),sign,wdSpacer(0)
+  ];
+  return docx.Packer.toBlob(wdDocument(children,{top:680,bottom:680,left:WD_CM,right:WD_CM},'Laporan Kegiatan - '+name));
+}
+
+async function wdBuildAttendance({name,period,subtitle,items,ppk}){
+  const C=docx.AlignmentType.CENTER,cols=[646,1508,4309,4309],half=5386,dash=wdBorders('CFCFCF',docx.BorderStyle.DASHED);
+  const imgs=await wdPool(items.flatMap(it=>[it.inPhoto,it.outPhoto]),6,u=>photoJpeg(u,440,440));
+  const rows=items.map((it,i)=>[
+    [wdText(String(i+1),{bold:true,size:18,align:C})],
+    [wdText(fmt(it.date),{bold:true,size:18,align:C})],
+    [wdPhoto(imgs[i*2],!!it.inPhoto,166,166)],
+    [wdPhoto(imgs[i*2+1],!!it.outPhoto,166,166)]
+  ]);
+  const sign=wdTable([wdRow([
+    wdCell([wdText('')],half,{borders:dash,margins:{top:160,bottom:80,left:80,right:80},valign:docx.VerticalAlign.TOP}),
+    wdCell(wdSignLines([{t:'Mengetahui,'},{t:'PPK,'},...wdBlank(7),{t:ppk.name||'',u:true},{t:ppk.position||''},{t:'NIP. '+(ppk.nip||'')}],{line:280}),half,{borders:dash,margins:{top:160,bottom:80,left:80,right:80},valign:docx.VerticalAlign.TOP})
+  ],{h:2400})],[half,half]);
+  const children=[
+    wdText('DAFTAR HADIR',{bold:true,size:30,align:C,after:140}),
+    wdText(subtitle,{bold:true,size:22,align:C,after:120}),
+    ...wdPagedTables({name,period,cols,headLabels:['No','Tanggal','Data Dukung Kehadiran Datang','Data Dukung Kehadiran Pulang'],headSize:18,rows,rowH:3000,rowEst:153,pagePt:785,fixedPt:43,headPt:34}),
+    wdSpacer(360),sign,wdSpacer(0)
+  ];
+  return docx.Packer.toBlob(wdDocument(children,{top:WD_CM,bottom:WD_CM,left:WD_CM,right:WD_CM},'Daftar Hadir - '+name));
+}
+
+function wdBusy(msg){
+  const d=document.createElement('div');
+  d.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1c1f26;color:#fff;padding:10px 16px;border-radius:10px;font:600 13px Arial;z-index:9999;box-shadow:0 6px 20px rgba(0,0,0,.25)';
+  d.textContent=msg;document.body.appendChild(d);return()=>d.remove();
+}
+async function wdSave(make,filename){
+  if(!window.docx)return alert('Library Word gagal dimuat. Periksa koneksi internet lalu refresh halaman.');
+  const done=wdBusy('Menyiapkan dokumen Word…');
+  try{downloadBlob(await make(),filename)}
+  catch(e){console.error(e);alert('Dokumen Word gagal dibuat: '+(e?.message||e))}
+  finally{done()}
+}
+const wdFile=s=>String(s||'Employee').replace(/\s+/g,'_');
 
 async function attendanceWord(){
   if(!employee)return alert('Data pegawai belum tersedia.');
@@ -413,12 +454,10 @@ async function attendanceWord(){
   let q=await sb.from('attendance').select('*').in('report_id',ids).order('attendance_date',{ascending:true}).limit(1000);
   if(q.error)return alert('Gagal membaca absensi: '+q.error.message);
   if(!q.data?.length)return alert('Belum ada data absensi untuk diunduh.');
-  let rows='';
-  q.data.forEach((x,i)=>{rows+='<tr class="data-row"><td class="num">'+(i+1)+'</td><td class="date">'+fmt(x.attendance_date)+'</td><td class="photo">'+attendancePhoto(x.check_in_photo)+'</td><td class="photo">'+attendancePhoto(x.check_out_photo)+'</td></tr>';});
-  let ppkName=$('ppkName')?.value||'',ppkPosition=$('ppkPosition')?.value||'',ppkNip=$('ppkNip')?.value||'';
-  let first=rs.data?.[0],period=first?(months[first.month]+' '+first.year):'';
-  let h=buildAttendanceWordHtml(rows,employee.name,employee.employee_number,employee.department,employee.position,period,ppkName,ppkPosition,ppkNip,getDocSubtitle(false));
-  downloadBlob(htmlDocx.asBlob(h),'Absensi_'+(employee.name||'Employee').replace(/\s+/g,'_')+'.docx');
+  const items=q.data.map(x=>({date:x.attendance_date,inPhoto:x.check_in_photo,outPhoto:x.check_out_photo}));
+  const first=rs.data?.[0],period=first?(months[first.month]+' '+first.year):'';
+  const ppk={name:$('ppkName')?.value||'',position:$('ppkPosition')?.value||'',nip:$('ppkNip')?.value||''};
+  await wdSave(()=>wdBuildAttendance({name:employee.name,period,subtitle:getDocSubtitle(false),items,ppk}),'Absensi_'+wdFile(employee.name)+'.docx');
 }
 
 async function adminAttendanceWord(){
@@ -432,10 +471,10 @@ async function adminAttendanceWord(){
   let q=await sb.from('attendance').select('*').eq('report_id',r.data[0].id).order('attendance_date',{ascending:true});
   if(q.error)return alert('Gagal membaca absensi: '+q.error.message);
   if(!q.data?.length)return alert('Belum ada data absensi untuk diunduh.');
-  let rows='';
-  q.data.forEach((x,i)=>{rows+='<tr class="data-row"><td class="num">'+(i+1)+'</td><td class="date">'+fmt(x.attendance_date)+'</td><td class="photo">'+attendancePhoto(x.check_in_photo)+'</td><td class="photo">'+attendancePhoto(x.check_out_photo)+'</td></tr>';});
-  let h=buildAttendanceWordHtml(rows,emp.data.name,emp.data.employee_number,emp.data.department,emp.data.position,months[month]+' '+year,$('adminPpkName')?.value||'',$('adminPpkPosition')?.value||'',$('adminPpkNip')?.value||'',getDocSubtitle(true));
-  downloadBlob(htmlDocx.asBlob(h),'Absensi_'+(emp.data.name||'Employee').replace(/\s+/g,'_')+'_'+year+'_'+String(month).padStart(2,'0')+'.docx');
+  const items=q.data.map(x=>({date:x.attendance_date,inPhoto:x.check_in_photo,outPhoto:x.check_out_photo}));
+  const ppk={name:$('adminPpkName')?.value||'',position:$('adminPpkPosition')?.value||'',nip:$('adminPpkNip')?.value||''};
+  await wdSave(()=>wdBuildAttendance({name:emp.data.name,period:months[month]+' '+year,subtitle:getDocSubtitle(true),items,ppk}),
+    'Absensi_'+wdFile(emp.data.name)+'_'+year+'_'+String(month).padStart(2,'0')+'.docx');
 }
 
 async function adminDownloadWord(){
@@ -447,30 +486,22 @@ async function adminDownloadWord(){
   let q=await sb.from('activities').select('*').eq('report_id',report.id).order('activity_date').order('activity_time');
   if(q.error)return alert('Gagal membaca kegiatan: '+q.error.message);
   if(!q.data?.length)return alert('Belum ada kegiatan untuk diunduh.');
-  let rows='';q.data.forEach((x,i)=>rows+='<tr><td style="text-align:center;width:6%">'+(i+1)+'</td><td style="text-align:center;width:14%;font-weight:600">'+fmt(x.activity_date)+'</td><td style="text-align:center;width:40%;height:145px">'+(x.photo_url?'<img src="'+esc(x.photo_url)+'" width="197" height="155" style="width:5.2cm;height:4.1cm;display:block;margin:0 auto">':'-')+'</td><td style="text-align:center;width:40%;font-weight:600">'+esc(x.description)+'</td></tr>');
   const name=emp.data.name||'Employee';
-  const html='<html><head><meta charset="utf-8"><style>'+reportWordCss()+'</style></head><body>'+
-    '<div class="title">LAPORAN KEGIATAN</div>'+
-    '<div class="subtitle">'+esc(getDocSubtitle(true))+'</div>'+
-    reportPagedTables(name,months[report.month]+' '+report.year,rows)+
-    '<table class="sign"><tr><td style="text-align:center;vertical-align:top;">Mengetahui,<br>PPK,<br><br><br><br><br><br><br><u>'+esc($('adminPpkName').value||'')+'</u><br>'+esc($('adminPpkPosition').value||'')+'<br>NIP. '+esc($('adminPpkNip').value||'')+'</td><td style="text-align:center;vertical-align:top;"><br>Yang Membuat Laporan,<br><br><br><br><br><br><br><u>'+esc(name)+'</u></td></tr></table>'+
-    '</body></html>';
-  downloadBlob(htmlDocx.asBlob(html),'Laporan_'+name.replace(/\s+/g,'_')+'_'+report.year+'_'+String(report.month).padStart(2,'0')+'.docx');
+  const items=q.data.map(x=>({date:x.activity_date,photo:x.photo_url,desc:x.description}));
+  const ppk={name:$('adminPpkName').value||'',position:$('adminPpkPosition').value||'',nip:$('adminPpkNip').value||''};
+  await wdSave(()=>wdBuildReport({name,period:months[report.month]+' '+report.year,subtitle:getDocSubtitle(true),items,ppk}),
+    'Laporan_'+wdFile(name)+'_'+report.year+'_'+String(report.month).padStart(2,'0')+'.docx');
 }
 
 async function word(){
   if(!report)return alert('Buka laporan terlebih dahulu');
   let q=await sb.from('activities').select('*').eq('report_id',report.id).order('activity_date').order('activity_time');
   if(q.error)return alert(q.error.message);if(!q.data?.length)return alert('Belum ada kegiatan');
-  let rows='';q.data.forEach((x,i)=>rows+='<tr><td style="text-align:center;width:6%">'+(i+1)+'</td><td style="text-align:center;width:14%;font-weight:600">'+fmt(x.activity_date)+'</td><td style="text-align:center;width:40%;height:145px">'+(x.photo_url?'<img src="'+esc(x.photo_url)+'" width="197" height="155" style="width:5.2cm;height:4.1cm;display:block;margin:0 auto">':'-')+'</td><td style="text-align:center;width:40%;font-weight:600">'+esc(x.description)+'</td></tr>');
-  let name=employee?.name||user.email;
-  let html='<html><head><meta charset="utf-8"><style>'+reportWordCss()+'</style></head><body>'+
-    '<div class="title">LAPORAN KEGIATAN</div>'+
-    '<div class="subtitle">'+esc(getDocSubtitle(false))+'</div>'+
-    reportPagedTables(name,months[report.month]+' '+report.year,rows)+
-    '<table class="sign"><tr><td style="text-align:center;vertical-align:top;">Mengetahui,<br>PPK,<br><br><br><br><br><br><br><u>'+esc($('ppkName').value||'')+'</u><br>'+esc($('ppkPosition').value||'')+'<br>NIP. '+esc($('ppkNip').value||'')+'</td><td style="text-align:center;vertical-align:top;"><br>Yang Membuat Laporan,<br><br><br><br><br><br><br><u>'+esc(name)+'</u></td></tr></table>'+
-    '</body></html>';
-  downloadBlob(htmlDocx.asBlob(html),'Laporan_'+name.replace(/\s+/g,'_')+'_'+report.year+'_'+report.month+'.docx');
+  const name=employee?.name||user.email;
+  const items=q.data.map(x=>({date:x.activity_date,photo:x.photo_url,desc:x.description}));
+  const ppk={name:$('ppkName').value||'',position:$('ppkPosition').value||'',nip:$('ppkNip').value||''};
+  await wdSave(()=>wdBuildReport({name,period:months[report.month]+' '+report.year,subtitle:getDocSubtitle(false),items,ppk}),
+    'Laporan_'+wdFile(name)+'_'+report.year+'_'+report.month+'.docx');
 }
 restoreDocSubtitle();
 restoreSchedule();
